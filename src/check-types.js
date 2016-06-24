@@ -678,9 +678,14 @@
     assertImpl(predicate.apply(null, args), nonEmptyString(message) ? message : defaultMessage);
   }
 
-  function assertImpl (value, message) {
-    if (value === false) {
-      throw new Error(message || 'Assertion failed');
+  function assertImpl (value, message, errType) {
+    if (process.env.NODE_ENV !== 'production' && value === false) {
+      var m = message || 'Assertion failed';
+      if (errType) {
+        throw new errType(m);
+      } else {
+        throw new Error(m);
+      }
     }
   }
 
